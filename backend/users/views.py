@@ -4,10 +4,12 @@ from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.views import APIView
+from rest_framework import exceptions
+from rest_framework import generics
 import jwt
 import datetime
 from .models import *
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 
 # Create your views here.
 class RegisterView(APIView):
@@ -77,3 +79,38 @@ class LogoutView(APIView):
             'message': "success"
         }
         return response
+
+class CartView(generics.ListAPIView):
+  serializer_class = CartSerializer
+
+  def get_queryset(self):
+      """
+        return a list of all records for
+        the user as determined by the userID portion of the URL.
+        """
+      userID = self.kwargs['id']
+      return Cart.objects.filter(user=userID)
+
+
+class CartUpdateView(viewsets.ModelViewSet):
+    serializer_class = CartSerializer
+    queryset = Cart.objects.all()
+
+    def update(self, request, *args, **kwargs):
+        cartID = self.kwargs['pk']
+        serializer = Cart.objects.filter(id=cartID)
+        return Response(serializer.data)
+
+class WishlistAPI(generics.ListAPIView):
+    queryset = Wishlist.objects.all()
+    serializer_class = WishListSerializer
+
+    def api_wishlist(request, slug):
+      try:
+          product = Wishlist.object.get(slug=slug)
+      except Wishlist.DoesNotExist:
+          return Response(status=status.HTTP_404_NOT_FOUND)
+
+      if request.method == "GET":
+          serializer = WishListSerializer(product)
+          return Response(serializer.data)
