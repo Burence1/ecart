@@ -7,7 +7,7 @@ from cloudinary.models import CloudinaryField
 # Create your models here.
 class Category(models.Model):
   name = models.CharField(max_length=100, verbose_name=("Name of Category"))
-  image = CloudinaryField('category', verbose_name=("Image"))
+  image = CloudinaryField('category')
   parent_category=models.ForeignKey('self',limit_choices_to={'parent_category__isnull':True},on_delete=models.CASCADE,blank=True,null=True,verbose_name=("Category Parent"))
 
   def __str__(self):
@@ -28,17 +28,17 @@ class Product(models.Model):
   stock_items = models.IntegerField(verbose_name=("Product Items in Stock"))
   brand = models.ForeignKey(Brand,on_delete=models.CASCADE, verbose_name=("Brand ID"))
   category = models.ForeignKey(Category,on_delete=models.CASCADE,verbose_name=("Category ID"))
-  image = CloudinaryField('product',verbose_name=("Product  Image"), blank=True, null=True)
+  image = CloudinaryField('product',blank=True, null=True)
 
   def __str__(self):
     return self.name
 
-class Image(models.Model):
-  product = models.ForeignKey(Product, null=True, on_delete=models.CASCADE, verbose_name="Product ID")
-  front_view = CloudinaryField('front_view',verbose_name=("Product Front Image"))
-  top_view = CloudinaryField('top_view',verbose_name=("Product Top Image"))
-  side_view = CloudinaryField('side_view',verbose_name=("Product Side Image"))
-  inner_view = CloudinaryField('inner_view',verbose_name=("Product Inner Image"))
+class ProductImage(models.Model):
+  product_id = models.ForeignKey(Product, null=True, on_delete=models.CASCADE, verbose_name="Product ID")
+  front_view = CloudinaryField('front_view')
+  top_view = CloudinaryField('top_view')
+  side_view = CloudinaryField('side_view')
+  inner_view = CloudinaryField('inner_view')
 
 
 class Comment(models.Model):
