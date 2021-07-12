@@ -30,3 +30,9 @@ class CartSerializer(serializers.ModelSerializer):
   class Meta:
       model = Cart
       exclude = []
+
+
+class CartQTYSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cart
+        exclude = []
