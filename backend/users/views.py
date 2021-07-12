@@ -48,7 +48,6 @@ class LoginView(APIView):
       }
       return response
 
-
 class UserView(APIView):
     def get(self, request):
         token = request.COOKIES.get('jwt')
@@ -63,13 +62,11 @@ class UserView(APIView):
 
         user = User.objects.filter(id=payload['id']).first()
         serializer = UserSerializer(user)
-
         return Response(serializer.data)
 
 class UsersView(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
-
 
 class LogoutView(APIView):
     def post(self, request):
@@ -90,7 +87,6 @@ class CartView(generics.ListAPIView):
         """
       userID = self.kwargs['id']
       return Cart.objects.filter(user=userID)
-
 
 class CartUpdateView(viewsets.ModelViewSet):
     serializer_class = CartSerializer
